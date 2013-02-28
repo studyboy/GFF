@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule !^.*?\.(jpg|jpeg|gif|png|css|js)$ index.class.php [NC]
