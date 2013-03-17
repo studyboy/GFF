@@ -14,6 +14,7 @@ return $config['system'] =array(
          'db_connect' =>''
       ),
    'route' =>array(
+         'default_module'   =>'home',
          'default_controller' =>'index',   //
          'default_action' =>'index',       //
       ),
