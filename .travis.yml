@@ -1,11 +1,11 @@
 language: php
 php:
 # - '5.4'
- - '5.5'
+  - '5.5'
 
 
 env:
- - DB=mysql
+  - DB=mysql
 #set before scirpt 
 #before_script:
 
