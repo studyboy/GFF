@@ -7,16 +7,17 @@ php:
 env:
   - DB=mysql
   
-matrix:
-  include:
-    - php: '5.3'
-    - evn: DB=mysql
-  allow_failures:
-    - php: '5.3'
+#matrix:
+ # include:
+  #  - php: '5.3'
+  #  - evn: DB=mysql
+  #allow_failures:
+  #  - php: '5.3'
     
 #set before scirpt 
 #before_script:
-
+before_script：
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS mytest;" -uroot; fi 
 # use the $DB env variable to determine the phpunit.xml to use
 #script: phpunit --configuration phpunit_$DB.xml --coverage-text
-script: echo 'yes'
+script: true
