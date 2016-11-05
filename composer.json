@@ -1,0 +1,18 @@
+{
+	"name" : "studyboy/GFF",
+	"description": "PHP framework for independent design and development",
+	"keywords" :["PHP Framework"],
+	"homepage" :"https://github.com/studyboy/GFF",
+	"type"    : "PHP Framework Project",
+	"license" : "MIT",
+	"authors" :[{
+		"name" : "studyboy",
+		"email": "johngao@qq.com"
+	}],
+	"require" :{ 
+		"php" : ">=5.4.0"
+	},
+	"config" :{
+		"process-timeout" : 1800
+	}
+}
