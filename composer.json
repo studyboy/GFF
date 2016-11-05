@@ -5,6 +5,7 @@
 	"homepage" :"https://github.com/studyboy/GFF",
 	"type"    : "project",
 	"license" : "MIT",
+    	"version" : "1.0.0",
 	"authors" :[{
 		"name" : "studyboy",
 		"email": "johngao@qq.com"
