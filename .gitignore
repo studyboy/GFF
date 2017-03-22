@@ -1,0 +1,10 @@
+#vendor/*
+#
+# global ignore
+#
+.*
+
+#
+# sub ignore
+#
+vendor/*

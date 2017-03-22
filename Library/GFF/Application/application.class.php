@@ -15,9 +15,9 @@ class Application {
 	 protected $_response;
 	 protected $config=array();
 	  
-	 private function __construct(){}
+	 public function __construct(){}
 	 
-     static public  function run(){
+     public  public  function run(){
         $instance= new self();
         $instance->init();
      	$instance->getRequest();
@@ -49,7 +49,7 @@ class Application {
      	                           
           $controllerName = lcfirst($controllerName);
      	  $conFile=APP_CONTROLLER_PATH.$moduleName.'/'.$controllerName.'Controller.class.php';
-//     	  echo $conFile;
+
           $controllerName.='Controller';
           $actionName .='Action';
      	  if(!file_exists($conFile)){

@@ -25,7 +25,7 @@ class ApplicationHelper{
 	}
 	public function setOptions(){
 		if(!empty($this->options)) return $this->options;
-		$optionsPath=PROJECT_ROOT.'Public/Config/config.class.php';
+		$optionsPath=PROJECT_ROOT.'public/config/config.class.php';
 		require $optionsPath;
 		return $config['system'];
 	}
