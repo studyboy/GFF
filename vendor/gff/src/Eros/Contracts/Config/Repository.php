@@ -1,5 +1,5 @@
 <?php
-namespace  Eros\Contract\Config;
+namespace  Eros\Contracts\Config;
 
 interface Repository{
 	/**

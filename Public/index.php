@@ -3,16 +3,55 @@
 /*****************************
  * 引入自動加載程序
  ********************************/
-require __DIR__."vendor/autoload.php";
+namespace AB;
+use Eros\Support\Finder;
 
-require __DIR__."/config/config_const.class.php";
+define('ROOT',dirname(__DIR__));
+
+require ROOT."/vendor/autoload.php";
+
+$dirs = Finder::create()->files()->name('*')->in(ROOT.'/config');
 
 
-$app = require __DIR__.'/bootstrap/app.class.php';
+class A{
+	public function __construct(\Iterater $a,$b){
+		
+	}
+}
 
-//启动类
+class B extends A {
+	
+}
 
-$app->run();
+
+$para = new \ReflectionClass("AB\B");
+
+echo ($p = $para->getConstructor()->getParameters()[0]);
+echo $p->name;
+exit;
+echo ($con->getParameters()[0]->getClass()->getName()->name);
+exit;
+
+
+//echo count($dirs).'ok';
+
+//print_r($dirs);
+
+foreach ($dirs as $dir){
+	 print_r($dir->getFileName()."\n\r");
+}
+exit;
+
+
+//
+//require __DIR__."/config/config_const.class.php";
+//
+//
+//$app = require __DIR__.'/bootstrap/app.class.php';
+//
+////启动类
+//
+//$app->run();
 
 
 

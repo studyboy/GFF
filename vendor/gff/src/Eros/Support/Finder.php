@@ -29,7 +29,7 @@ class Finder implements \IteratorAggregate, \Countable{
 	public function __construct(){
 		
 		$this
-			->addAdapter(new PhpAdapter())
+			->addAdapter(new PhpAdapter(),'-50')
 //			->addAdapter(other)
 			->setAdapter('php');
 	}
@@ -104,7 +104,6 @@ class Finder implements \IteratorAggregate, \Countable{
 			
 			$it = new \ArrayIterator();
 			foreach ($iterator as $file){
-				
 				$it->append($file instanceof \SplFileInfo ? $file : new \SplFileInfo($file));
 			}
 			
