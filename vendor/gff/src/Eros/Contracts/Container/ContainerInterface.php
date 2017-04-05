@@ -9,7 +9,7 @@ interface ContainerInterface {
 	 * @param  string  $abstract
 	 * @return bool
 	 */
-	public function resovable($abstract);
+	public function resolvable($abstract);
 
 	/**
 	 * Alias a type to a different name.
