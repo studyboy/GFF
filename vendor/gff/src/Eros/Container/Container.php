@@ -70,12 +70,26 @@ class Container implements \ArrayAccess, ContainerInterface {
 	
 	protected $afterResovingCallbacks = array();
 	
+	public function call($callback, array $paramters = array() , $defaultMethod = null ){
+		
+	}
 	
 	public function isAlias($abstract){
+		
 		return isset($this->aliases[$abstract]);
 	}
+	
 	public function alias($abstract, $alias){
-		return $this->aliases[$abstract] = $alias;
+		
+		return $this->aliases[$alias] = $abstract;
+	}
+	public function resolved($abstract) {
+		
+		return isset($this->resolved[$abstract]) || isset($this->instances[$abstract]);
+	}
+	public function resolving($abstract, Closure $callback = null){
+	}
+	public function afterResolving($abstract, Closure $callback = null){
 	}
 	/**
 	 * 聲明綁定接口實現實例
@@ -110,18 +124,32 @@ class Container implements \ArrayAccess, ContainerInterface {
 		
 		//如果是數組，則指定了別名，將為其綁定入別名
 		if( is_array($abstract)){
+			
 			list($abstract, $alias) = $this->extractAlias($abstract);
+			
 			$this->alias($abstract, $alias);
 		}
 		
 		unset($this->aliases[$abstract]);
 		
+		//檢測是否之前已經有綁定對象，如果有綁定則調用rebound調用容器的註冊
+		$bound = $this->resolvable($abstract);
+		
 		$this->instances[$abstract] = $instance;
 		
 		//如果是一個已經綁定的抽象類，將通過rebound調用容器內的回調註冊類，并採用在此實例的對象更新綁定實例
-		if( $this->resolvable($abstract)){
+		if( $bound){
+			die('kkk'.$abstract);
 			$this->rebound($abstract);
 		}
+	}
+	/**
+	 * 聲明單例
+	 * @see Eros\Contracts\Container.ContainerInterface::singleton()
+	 */
+	public function singleton($abstract, $concrete = null){
+		
+		$this->bind($abstract, $concrete, true);
 	}
 
 	public function extractAlias(array $definition){
@@ -142,7 +170,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 			return $this->instances[$abstract];
 		}
 		//獲取接口實現對象或函數
-		$concret = $this->getConcret($abstract);
+		$concret = $this->getConcrete($abstract);
 		
 		if( $this->isBuildable($concret, $abstract) ){
 			
@@ -153,11 +181,11 @@ class Container implements \ArrayAccess, ContainerInterface {
 			$object = $this->make($concret, $parameters);
 		}
 		
+		
 		//如果該實例為單例，直接調用，不再創建新實例
 		if( $this->isShared($abstract)){
 			
 			$this->instances[$abstract] = $object;			
-		
 		}
 		
 		$this->fireResolvingCallbacks($abstract, $object);
@@ -179,7 +207,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 		}
 		
 		$reflect = new \ReflectionClass($concret);
-		
+
 		if( !$reflect->isInstantiable()){
 
 			throw new BindingResolutionException("Target [$concret] is not instantiable.");
@@ -188,8 +216,8 @@ class Container implements \ArrayAccess, ContainerInterface {
 		$constructor = $reflect->getConstructor();
 		
 		if( is_null($constructor) ){
-			
-			return new $concret;
+
+			return new $concret();
 		}
 		
 		$dependences = $constructor->getParameters();
@@ -400,6 +428,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 		$instance = $this->make($abstract);
 		
 		foreach ($this->getReboundCallbacks($abstract) as $callback){
+			
 			call_user_func($callback, $this, $instance);
 		}
 	}
@@ -486,6 +515,10 @@ class Container implements \ArrayAccess, ContainerInterface {
 		}
 		
 		$this->bind($offset,$value);
+	}
+	public function offsetUnset($offset){
+		
+		unset($this->bindings[$offset], $this->instances[$offset], $this->resolved[$offset]);
 	}
 	public function __get($key){
 		

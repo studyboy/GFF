@@ -27,7 +27,7 @@ interface ContainerInterface {
 	 * @param  array|mixed   ...$tags
 	 * @return void
 	 */
-	public function tag($abstracts, $tags);
+//	public function tag($abstracts, $tags);
 
 	/**
 	 * Resolve all of the bindings for a given tag.
@@ -35,7 +35,7 @@ interface ContainerInterface {
 	 * @param  array  $tag
 	 * @return array
 	 */
-	public function tagged($tag);
+//	public function tagged($tag);
 
 	/**
 	 * Register a binding with the container.
@@ -55,7 +55,7 @@ interface ContainerInterface {
 	 * @param  bool  $shared
 	 * @return void
 	 */
-	public function bindIf($abstract, $concrete = null, $shared = false);
+//	public function bindIf($abstract, $concrete = null, $shared = false);
 
 	/**
 	 * Register a shared binding in the container.
@@ -75,7 +75,7 @@ interface ContainerInterface {
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function extend($abstract, Closure $closure);
+//	public function extend($abstract, Closure $closure);
 
 	/**
 	 * Register an existing instance as shared in the container.
@@ -92,7 +92,7 @@ interface ContainerInterface {
 	 * @param  string  $concrete
 	 * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
 	 */
-	public function when($concrete);
+//	public function when($concrete);
 
 	/**
 	 * Resolve the given type from the container.
