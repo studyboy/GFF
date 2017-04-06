@@ -1,58 +1,40 @@
 <?php
-
-/*****************************
- * 引入自動加載程序
- ********************************/
-namespace AB;
-use Eros\Support\Finder;
-
+/*--------------------------------
+ * 定義根目錄
+ *--------------------------------
+ * 
+ */
+//error_reporting(E_ALL);
 define('ROOT',dirname(__DIR__));
+
+/*------------------------------------------------
+ * 引入compoer自動加載文件，以便自動加載涉及到的類文件
+ * ------------------------------------------------
+ * 
+ *
+ */
 
 require ROOT."/vendor/autoload.php";
 
-$dirs = Finder::create()->files()->name('*')->in(ROOT.'/config');
+
+/*--------------------------------------------
+ * 引入引導程序
+ *--------------------------------------------
+ * 
+ * 引入application以便我們能夠啟動框架，并返回
+ * 視圖給瀏覽器
+ */
+
+$app = require ROOT.'/bootstrap/app.php';
 
 
-class A{
-	public function __construct(\Iterater $a,$b){
-		
-	}
-}
 
-class B extends A {
-	
-}
+$kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 
+print_r($kernel.'kkk');exit;
 
-$para = new \ReflectionClass("AB\B");
-
-echo ($p = $para->getConstructor()->getParameters()[0]);
-echo $p->name;
-exit;
-echo ($con->getParameters()[0]->getClass()->getName()->name);
-exit;
-
-
-//echo count($dirs).'ok';
-
-//print_r($dirs);
-
-foreach ($dirs as $dir){
-	 print_r($dir->getFileName()."\n\r");
-}
-exit;
-
-
+//$reponse = $kenel->handle();
 //
-//require __DIR__."/config/config_const.class.php";
-//
-//
-//$app = require __DIR__.'/bootstrap/app.class.php';
-//
-////启动类
-//
-//$app->run();
-
-
+//$reponse->send();
 
 ?>

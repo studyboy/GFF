@@ -16,7 +16,7 @@ interface ApplicationInterface extends ContainerInterface {
 	 *
 	 * @return string
 	 */
-	public function basePath();
+	public function getBasePath();
 
 	/**
 	 * Get or check the current application environment.
@@ -24,14 +24,14 @@ interface ApplicationInterface extends ContainerInterface {
 	 * @param  mixed
 	 * @return string
 	 */
-	public function environment();
+//	public function environment();
 
 	/**
 	 * Determine if the application is currently down for maintenance.
 	 *
 	 * @return bool
 	 */
-	public function isDownForMaintenance();
+//	public function isDownForMaintenance();
 
 	/**
 	 * Register all of the configured providers.
