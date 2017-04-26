@@ -16,6 +16,7 @@ use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionParameter;
 
+//error_reporting(E_ALL);
 
 class Container implements \ArrayAccess, ContainerInterface {
 	
@@ -106,18 +107,21 @@ class Container implements \ArrayAccess, ContainerInterface {
 		$this->dropStaleInstance($abstract);
 		
 		$concrete = is_null($concrete) ? $abstract : $concrete;
-		
+
 		//如果實現類不是匿名函數，將會轉為匿名函數，以便於擴展
 		if( ! $concrete instanceof Closure){
+			
 			$concrete = $this->getClosure($abstract, $concrete);
 		}
-		
-		$this->bindings[$abstract] = compact('concrete', 'shared');
-		
+
+		$this->bindings[$abstract] = compact('concrete', 'shared');;
+
 		//如果該類已經解析了，將調用rebound監聽，以便已經解析的對象能夠獲取通過監聽callbacks更新對象的拷貝
 		if( $this->resolved[$abstract]){
+			
 			$this->rebound($abstract);
 		}
+
 	}
 	
 	public function instance($abstract, $instance){
@@ -139,7 +143,6 @@ class Container implements \ArrayAccess, ContainerInterface {
 		
 		//如果是一個已經綁定的抽象類，將通過rebound調用容器內的回調註冊類，并採用在此實例的對象更新綁定實例
 		if( $bound){
-			die('kkk'.$abstract);
 			$this->rebound($abstract);
 		}
 	}
@@ -153,6 +156,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 	}
 
 	public function extractAlias(array $definition){
+		
 		return array(key($definition), current($definition));
 	}
 	
@@ -167,20 +171,20 @@ class Container implements \ArrayAccess, ContainerInterface {
 		
 		//獲取單例對象，以免重複實例化
 		if( isset($this->instances[$abstract]) ){
+			
 			return $this->instances[$abstract];
 		}
 		//獲取接口實現對象或函數
-		$concret = $this->getConcrete($abstract);
-		
-		if( $this->isBuildable($concret, $abstract) ){
-			
-			$object = $this->build($concret, $parameters);
+		$concrete = $this->getConcrete($abstract);
+
+		if( $this->isBuildable($concrete, $abstract) ){
+
+			$object = $this->build($concrete, $parameters);
 			
 		}else{
 			
-			$object = $this->make($concret, $parameters);
+			$object = $this->make($concrete, $parameters);
 		}
-		
 		
 		//如果該實例為單例，直接調用，不再創建新實例
 		if( $this->isShared($abstract)){
@@ -193,40 +197,49 @@ class Container implements \ArrayAccess, ContainerInterface {
 		$this->resolved[$abstract] = true;
 		
 		return $object;
-		
 	}
 	/**
 	 * 
 	 * 實例化對象,并將其保存進容器內
 	 */
-	public function build($concret, $parameters = array() ){
-		
-		if($concret instanceof Closure){
+	public function build($concrete, $parameters = array() ){
+
+		if($concrete instanceof Closure){
 			
-			return $concret($this,$parameters);
+			return $concrete($this,$parameters);
 		}
-		
-		$reflect = new \ReflectionClass($concret);
+
+		$reflect = new \ReflectionClass($concrete);
 
 		if( !$reflect->isInstantiable()){
 
-			throw new BindingResolutionException("Target [$concret] is not instantiable.");
+			throw new BindingResolutionException("Target [$concrete] is not instantiable.");
 		}
+		
+		$this->buildStack[] = $concrete;
 		
 		$constructor = $reflect->getConstructor();
 		
 		if( is_null($constructor) ){
 
-			return new $concret();
+			array_pop($this->buildStack);
+			
+			return new $concrete();
 		}
 		
-		$dependences = $constructor->getParameters();
+		$dependencies = $constructor->getParameters();
 		
 		//解析類的構造函數的參數，當構造函數有參數，我們將索引轉為關聯數組
-		$parameters = $this->keyParametersByArgument($dependences, $parameters);
+		$parameters = $this->keyParametersByArgument(
+			$dependencies, $parameters
+		);
+
+		$instance = $this->getDependences($dependencies, $parameters);
 		
-		$instance = $this->getDependences($dependences, $parameters);
+	 
+		array_pop($this->buildStack);
 		
+
 		return $reflect->newInstanceArgs($instance);
 	}
 	/**
@@ -254,7 +267,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 	 * 匹配參數值，沒有設置取默認值或者實例化”強制對象類型“
 	 * @param unknown_type $parameters
 	 */
-	protected function getDependences(ReflectionParameter $parameters, $primitives = [] ){
+	protected function getDependences($parameters, $primitives = array() ){
 		
 		$dependencies = array();
 		
@@ -266,14 +279,13 @@ class Container implements \ArrayAccess, ContainerInterface {
 				
 				$dependencies[] = $primitives[$parameter->name];
 				
-			}elseif( is_null($dependencies)){
+			}elseif( is_null($dependency)){
 				
 				$dependencies[] = $this->resolveNonClass($parameter);
 				
 			}else{
 				
 				$dependencies[] = $this->resolveClass($parameter);
-				
 			}
 		}
 		
@@ -287,6 +299,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 	protected function resolveNonClass(ReflectionParameter $parameter){
 		
 		if( $parameter->isDefaultValueAvailable()){
+			
 			return $parameter->getDefaultValue();
 		}
 		
@@ -302,7 +315,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 	 */
 	protected function resolveClass(ReflectionParameter $parameter){
 		try{
-			
+//			echo $parameter->getClass()->name.">>>";
 			return $this->make($parameter->getClass()->name);
 			
 		}catch (BindingResolutionException $e){
@@ -330,16 +343,20 @@ class Container implements \ArrayAccess, ContainerInterface {
 	 * 通過接口，獲取具體的實現
 	 * @param unknown_type $abstract
 	 */
-	protected function getClosure($abstract, $concret){
+	protected function getClosure($abstract, $concrete){
 		
-		return function($c, $parameters = []) use($abstract, $concret){
+		return function($c, $parameters = array()) use($abstract, $concrete){
 			
-			$method = $abstract === $concret ? 'build' : 'make';
+			$method = $abstract == $concrete ? 'build' : 'make';
 			
-			$c->$method($concret, $parameters);
+			return $c->$method($concrete, $parameters);
 		};
 	}
-	
+	/**
+	 * 
+	 * 獲取映射的實現
+	 * @param unknown_type $abstract
+	 */
 	protected function getConcrete($abstract){
 		
 		if( !is_null($concrete = $this->getContextualConcrete($abstract))){
@@ -350,11 +367,10 @@ class Container implements \ArrayAccess, ContainerInterface {
 		if ( ! isset($this->bindings[$abstract])){
 			
 			if ($this->missingLeadingSlash($abstract) &&
-				isset($this->bindings['\\'.$abstract])){
+				     isset($this->bindings['\\'.$abstract])){
 				
 				$abstract = '\\'.$abstract;
 			}
-
 			return $abstract;
 		}
 		
@@ -378,9 +394,9 @@ class Container implements \ArrayAccess, ContainerInterface {
 		return is_string($abstract) && strpos($abstract, '\\') !== 0;
 	}
 	
-	protected function isBuildable($concret, $abstract){
+	protected function isBuildable($concrete, $abstract){
 		
-		return $concret === $abstract || $concret instanceof Closure;
+		return $concrete === $abstract || $concrete instanceof Closure;
 	}
 	
 	protected function isShared($abstract){

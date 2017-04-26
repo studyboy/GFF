@@ -5,6 +5,8 @@
  * 
  */
 //error_reporting(E_ALL);
+use Eros\Http\Request\ServerParameters;
+use Eros\Http\Request\Parameters;
 define('ROOT',dirname(__DIR__));
 
 /*------------------------------------------------
@@ -16,6 +18,9 @@ define('ROOT',dirname(__DIR__));
 
 require ROOT."/vendor/autoload.php";
 
+$p = new ServerParameters($_SERVER);
+
+print_r($p->getHeaders());
 
 /*--------------------------------------------
  * 引入引導程序
@@ -23,18 +28,17 @@ require ROOT."/vendor/autoload.php";
  * 
  * 引入application以便我們能夠啟動框架，并返回
  * 視圖給瀏覽器
+ * 
  */
-
 $app = require ROOT.'/bootstrap/app.php';
-
-
 
 $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 
-print_r($kernel.'kkk');exit;
+$reponse = $kernel->handle(
+	$request = Eros\Http\Request::run()
+);
 
-//$reponse = $kenel->handle();
-//
-//$reponse->send();
+//輸出模板
+$reponse->send();
 
 ?>
