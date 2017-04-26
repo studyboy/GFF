@@ -1,5 +1,4 @@
-<?php
-namespace Eros\Config;
+<?php namespace Eros\Config;
 /**
  * 
  * +------------------------------------------------
@@ -15,7 +14,7 @@ use Eros\Support\Arr;
 
 class Repository implements \ArrayAccess,RepositoryContract{
 	
-	private $items = [];
+	private $items = array();
 	
 	public function __construct(array $items = array()){
 		

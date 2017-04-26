@@ -1,10 +1,19 @@
 <?php namespace App\Http;
 
-use Eros\Contracts\Http\KernelInterface;
+use Eros\Http\Kernel AS HttpKernel;
 
-class Kernel implements KernelInterface {
-
-	public function handle(){
-		die('ok');
+class Kernel extends HttpKernel {
+	/**
+	 * (non-PHPdoc)
+	 * @see Eros\Contracts\Http.KernelInterface::handle()
+	 */
+	public function handle($request){
+		echo $_SERVER['PATH_INFO'];
+		die('my Kernel');
+	}
+	
+	public function __toString(){
+		
+		return get_class($this);
 	}
 }
