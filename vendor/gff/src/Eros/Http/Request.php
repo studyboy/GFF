@@ -1,5 +1,7 @@
 <?php namespace Eros\Http;
-
+/**
+ * 實現和調用分離
+ */
 use ArrayAccess;
 use Eros\Contracts\Http\RequestInterface;
 
@@ -10,6 +12,7 @@ class Request implements RequestInterface ,ArrayAccess{
 		
 	}
 	public static function run(){
+		
 		
 	}
 

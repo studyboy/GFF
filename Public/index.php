@@ -5,8 +5,7 @@
  * 
  */
 //error_reporting(E_ALL);
-use Eros\Http\Request\ServerParameters;
-use Eros\Http\Request\Parameters;
+
 define('ROOT',dirname(__DIR__));
 
 /*------------------------------------------------
@@ -15,12 +14,7 @@ define('ROOT',dirname(__DIR__));
  * 
  *
  */
-
 require ROOT."/vendor/autoload.php";
-
-$p = new ServerParameters($_SERVER);
-
-print_r($p->getHeaders());
 
 /*--------------------------------------------
  * 引入引導程序
