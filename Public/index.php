@@ -6,6 +6,8 @@
  */
 //error_reporting(E_ALL);
 
+use Eros\Http\Request\Request;
+//use Eros\Http\Request;
 define('ROOT',dirname(__DIR__));
 
 /*------------------------------------------------
@@ -15,6 +17,14 @@ define('ROOT',dirname(__DIR__));
  *
  */
 require ROOT."/vendor/autoload.php";
+
+
+
+$r = Request::createFromGlobals();
+//print_r($r);
+
+print_r($r->get('ab','test'));
+
 
 /*--------------------------------------------
  * 引入引導程序

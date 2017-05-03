@@ -76,7 +76,7 @@ class FileParameters extends Parameters{
 			unset($files[$k]);
 		}
 		
-		$files = array();
+//		$files = array();
 		foreach (array_keys($file['name']) as $key){
 			$files[$key] = $this->fixPhpFileArray(array(
 				'error'=> $file['error'][$key],

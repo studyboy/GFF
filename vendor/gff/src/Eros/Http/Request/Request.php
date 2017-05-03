@@ -88,7 +88,7 @@ class Request{
 	 * 
 	 * 構建所有變量
 	 */	
-	public static function createFromGlobals(array $query = array(), array $request = array(),array $attrs = array(),array $cookies=array(),array $files=array(), array $server=array(), array $content = null){
+	public static function createFromGlobals(){
 	
 		//php 在命令行端有將content_type content_length 保存在http_content_type 和http_content_length中
 		//屬於php 變量的bug
@@ -102,17 +102,21 @@ class Request{
 			}
 		}
 		
-		$request = self::createRequestFromFactory($query, $request, $attrs, $cookies, $files, $server);
+		$request = self::createRequestFromFactory($_GET, $_POST, array(), $_COOKIE, $_FILES, $server);
 		
 		
 		return $request;		
 	}
 	
 	public static function createRequestFromFactory(array $query = array(), array $request = array(),array $attrs = array(),array $cookies=array(),array $files=array(), array $server=array(), array $content = null){
+		
 		return new static($query, $request, $attrs, $cookies, $files, $server, $content);
 	}
 	
-   public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null){
+    public static function createFromBase(Request $request){
+    	
+    }
+    public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null){
    	
         $dup = clone $this;
         if ($query !== null) {

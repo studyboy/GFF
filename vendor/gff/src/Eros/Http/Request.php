@@ -2,10 +2,11 @@
 /**
  * 實現和調用分離
  */
+use Eros\Http\Request\Request as HttpRequest;
 use ArrayAccess;
 use Eros\Contracts\Http\RequestInterface;
 
-class Request implements RequestInterface ,ArrayAccess{
+class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
 
 
 	public function __construct(){
@@ -13,6 +14,7 @@ class Request implements RequestInterface ,ArrayAccess{
 	}
 	public static function run(){
 		
+		return static::createFromGlobals();
 		
 	}
 
