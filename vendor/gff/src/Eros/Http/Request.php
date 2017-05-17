@@ -8,16 +8,47 @@ use Eros\Contracts\Http\RequestInterface;
 
 class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
 
-
-	public function __construct(){
-		
-	}
+	
 	public static function run(){
-		
-		return static::createFromGlobals();
-		
+		return static::createFromBase(HttpRequest::createFromGlobals());
 	}
+	
+    public static function createFromBase(HttpRequest $request){
+    	
+    	if( $request instanceof static ) return $request;
+    	
+    	$content = $request->getContent();
+    	
+    	$request = (new static)->duplicate(
+    		$request->query->all(), $request->request->all(),
+    		$request->attrs->all(), $request->cookies->all(),
+    		$request->files->all(), $request->server->all()
+    	);
+    	
+    	$request->content = $content;
+    	
+    	$request->request = $request->getInputSource();
+    	
+    	return $request;
+    }
 
+    public function duplicate(array $query = null,array $request = null, array $attrs = null, array $cookies = null, array $files = null, array $server = null){
+    	
+    	return parent::duplicate($query, $request, $attrs, $cookies, $files, $server);
+    }
+    
+    public function getInputSource(){
+    	
+    	return $this->getMethod() === 'GET' ? $this->query : $this->request;
+    }
+    /**
+     * 
+     * 獲取傳輸內容
+     * @param unknown_type $key
+     */
+    public function input($key){
+    	
+    }
 	public function offsetExists($offset){
 	}
 	
@@ -28,5 +59,6 @@ class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
 	}
 	
 	public function offsetUnset($offset){
+		
 	}
 }

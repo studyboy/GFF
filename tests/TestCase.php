@@ -9,4 +9,8 @@ class TestCase extends Eros\Foundation\Testing\TestCase{
 		return $app;
 		
 	}
+	
+//	public function setUp(){
+//		echo "Test start :\r\n";
+//	}
 }

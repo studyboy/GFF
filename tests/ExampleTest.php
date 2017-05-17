@@ -27,4 +27,17 @@ class ExempleTest extends TestCase {
 		
 		return $stack;
 	}
+	/**
+	 *@dataProvider provider
+	 */
+	public function testData($a,$b,$sum){
+		$this->assertEquals($sum, $a+$b);
+	}
+	
+	public function provider(){
+		return array(
+			array(1,2,3),
+			array(1,5,7)
+		);
+	}
 }

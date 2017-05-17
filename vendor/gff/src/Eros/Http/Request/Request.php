@@ -21,14 +21,16 @@ class Request{
 	const METHOD_PURGE  = 'PURGE';
 	const METHOD_TRACE  = 'TRACE';
 	
-	protected $query;
-	protected $request;
-	protected $attrs;
-	protected $cookies;
-	protected $server;
+	protected static $httpMethodParameterOverride = false;
+	
+	public $query;
+	public $request;
+	public $attrs;
+	public $cookies;
+	public $server;
 	protected $content;
-	protected $files;
-	protected $headers;
+	public  $files;
+	public $headers;
 	protected $charset;
 	protected $encoding;
 	protected $language;
@@ -113,9 +115,6 @@ class Request{
 		return new static($query, $request, $attrs, $cookies, $files, $server, $content);
 	}
 	
-    public static function createFromBase(Request $request){
-    	
-    }
     public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null){
    	
         $dup = clone $this;
@@ -237,7 +236,7 @@ class Request{
     
     public function isMethod($method){
     	
-    	return $this->isMethod() === strtoupper($method);
+    	return $this->getMethod() === strtoupper($method);
     }
     
     public function isMethodSafe(){
@@ -292,6 +291,7 @@ class Request{
     }
     
     public function getContentType(){
+    	
     	return $this->getformat($this->server->get('CONTENT_TYPE'));
     }
     

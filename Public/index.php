@@ -6,6 +6,7 @@
  */
 //error_reporting(E_ALL);
 
+use Eros\Http\Request\AcceptHeader;
 use Eros\Http\Request\Request;
 
 define('ROOT',dirname(__DIR__));
@@ -18,11 +19,20 @@ define('ROOT',dirname(__DIR__));
  */
 require ROOT."/vendor/autoload.php";
 
-$r = Request::createFromGlobals();
-//print_r($r);
+//$r = Request::createFromGlobals();
+//print_r($r->headers->get('accept-language'));exit;
+//$ab = AcceptHeader::fromString($r->headers->get('Accept-Language'))->all();
 
-print_r($r->get('ab','test'));
 
+$statck = new SplStack();
+$statck->push('a');
+$statck->push('b');
+$statck->push('c');
+$statck->offsetSet(0, 'gsw');
+
+for ($statck->rewind(); $statck->valid();$statck->next()){
+	echo $statck->current().'<br/>';
+}
 
 /*--------------------------------------------
  * 引入引導程序

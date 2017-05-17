@@ -6,8 +6,9 @@ class HeaderParameters implements \IteratorAggregate, \Countable{
 	protected $cacheControl = array();
 	
 	public function __construct(array $headers){
-		
-		$this->add($headers);
+		foreach ($headers as $name=>$header){
+			$this->set($name,$header);
+		}
 	}
 	public function all(){
 		return $this->headers;
@@ -29,23 +30,27 @@ class HeaderParameters implements \IteratorAggregate, \Countable{
 	public function get($key, $default= null , $first = true){
 		
 		$key = $this->formatKey($key);
-		
-		if(!isset($this->headers[$key])){
+
+		if(!array_key_exists($key,$this->headers)){
+			
 			if(null === $default){
+				
 				return $first ? null : array();
 			}
 			return $first ? $default : array($default);
 		}
 		
 		if($first){
-			return count($this->headers[$key]) ? $this->headers[$key][0] : $default;
+			return count($this->headers[$key])? $this->headers[$key][0] : $default;
 		}
+		
 		return $this->headers[$key];
 	}
 	public function has($key){
 		
 		return array_key_exists(strtr(strtolower($key),'_','-'), $key);
 	}
+	
 	public function replace(array $headers= array()){
 		
 		$this->headers = array();
@@ -74,6 +79,8 @@ class HeaderParameters implements \IteratorAggregate, \Countable{
 		
 		$key = strtr(strtolower($key),'_','-');
 		
+		$value = array_values((array) $value);
+	
 		if( true === $replace || !isset($this->headers[$key]) ){
 			
 			$this->headers[$key] = $value;
