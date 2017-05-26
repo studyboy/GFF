@@ -1,7 +1,16 @@
 <?php
+
+use Eros\Http\Request\AcceptHeader;
 define('ROOT',dirname(__DIR__));
 
 require ROOT."/vendor/autoload.php";
+
+
+$request = Eros\Http\Request::run();
+echo $request->getMethod().'ok';
+print_r(AcceptHeader::fromString($request->headers->get('accept'))->all());
+
+exit;
 
 //use Eros\Http\Request\FileParameters;
 
@@ -60,14 +69,62 @@ $it->append($b);
 
 $ao = new ArrayObject(range(0,9));
 
-while(list($key,$v) = each($ao)){
-	unset($ao[$key]);
-}
+//while(list($key,$v) = each($ao)){
+//	unset($ao[$key]);
+//}
 
 //foreach ($ao as $key=>$v){
 //	unset($ao[$key]);
 //}
-print_r($ao);
+
+//}
+
+$rdi = new RecursiveDirectoryIterator(dirname(__DIR__).'/config',RecursiveDirectoryIterator::SKIP_DOTS);
+
+$rrdi = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::SELF_FIRST);
+
+
+foreach ($rrdi as $name => $obj){
+	echo $name.'::'.$obj->getFileName().PHP_EOL;
+}
+
+//print_r(iterator_to_array($rrdi));
+/**
+ * 
+ * +------------------------------------------------
+ * Enter description here ...
+ * +------------------------------------------------
+ * @author gaosongwang <songwanggao@gmail.com>
+ * +-------------------------------------------------
+ * @version 2017/5/26
+ * +-------------------------------------------------
+ */
+class a {
+	
+	public $a =12;
+	protected $b = 34;
+	private $cc ='jk';
+	
+	public function __construct($name , $sex='boy'){
+		
+	}
+	public function getName(){
+		$this->$cc;
+	}
+	
+}
+
+//$ab = new a();
+
+$rf = new ReflectionClass('a');
+
+print_r($rf->getFileName());
+//
+//foreach ($rf->getProperties() as $pro){
+//	if($pro->isPublic()) echo $pro->getName().":".$pro->getValue($pro).'ll';
+//}
+
+
 
 ?>
 

@@ -7,8 +7,9 @@
 	"license" : "MIT",
     	"version" : "1.0.0",
 	"authors" :[{
-		"name" : "studyboy",
-		"email": "johngao@qq.com"
+		"name" : "gaosongwang,nickname:studyboy",
+		"email": "johngao@qq.com",
+		"role" : "developer"
 	}],
 	"require" :{ 
 		"php" : ">=5.4.0",
@@ -23,6 +24,16 @@
 	        "type": "composer",
 	        "url": "https://packagist.phpcomposer.com"
 	    }
+	},
+	"autoload" : {
+		"files" :[
+			"vendor/gff/src/Eros/Support/Helpers.php"
+		],
+		"psr-4": {
+			"Eros\\": "vendor/gff/src/Eros/",
+			"App\\": "app/"
+			}
+		
 	}
 }
 

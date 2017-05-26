@@ -24,16 +24,6 @@ require ROOT."/vendor/autoload.php";
 //$ab = AcceptHeader::fromString($r->headers->get('Accept-Language'))->all();
 
 
-$statck = new SplStack();
-$statck->push('a');
-$statck->push('b');
-$statck->push('c');
-$statck->offsetSet(0, 'gsw');
-
-for ($statck->rewind(); $statck->valid();$statck->next()){
-	echo $statck->current().'<br/>';
-}
-
 /*--------------------------------------------
  * 引入引導程序
  *--------------------------------------------
@@ -49,6 +39,7 @@ $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 $reponse = $kernel->handle(
 	$request = Eros\Http\Request::run()
 );
+print_r($kernel);
 
 //輸出模板
 $reponse->send();

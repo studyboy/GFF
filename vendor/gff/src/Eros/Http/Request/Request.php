@@ -407,4 +407,16 @@ class Request{
 
         return $ipAddresses[0];
     }
+    /**
+     * 
+     * 獲取接受的格式
+     */
+    public function getAcceptableContentTypes(){
+    	
+    	if(null !== $this->acceptableContentTypes){
+    		return $this->acceptableContentTypes;
+    	}
+    	
+    	return $this->acceptableContentTypes = array_keys(AcceptHeader::fromString($this->headers->get('Access'))->all());
+    }
 }
