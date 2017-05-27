@@ -287,6 +287,7 @@ class Request{
     }
     
     public function setRequestFormat($format){
+    	
     	$this->format = $format;
     }
     

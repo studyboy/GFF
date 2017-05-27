@@ -11,6 +11,12 @@ if(!function_exists('array_get')){
 	}
 }
 
+if(!function_exists('array_forget')){
+	function array_forget(&$array, $key){
+		
+		return Arr::forget($array, $key);
+	}
+}
 
 if(!function_exists('str_contains')){
 

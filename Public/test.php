@@ -7,7 +7,8 @@ require ROOT."/vendor/autoload.php";
 
 
 $request = Eros\Http\Request::run();
-echo $request->getMethod().'ok';
+
+
 print_r(AcceptHeader::fromString($request->headers->get('accept'))->all());
 
 exit;

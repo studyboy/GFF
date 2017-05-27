@@ -10,6 +10,7 @@ class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
 
 	
 	public static function run(){
+		
 		return static::createFromBase(HttpRequest::createFromGlobals());
 	}
 	
@@ -43,6 +44,25 @@ class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
     }
     
     public function has($key){
+    	
+    	$keys = is_array($key) ? $key : func_get_args();
+    	
+    	foreach ($keys as $key){
+    		
+    		if( $this->isEmptyString($key)) return false;
+    		
+    	}
+    	
+    	return true;
+    }
+    
+    public function isEmptyString($key){
+    	
+    	$value = $this->input($key);
+    	
+    	$boolOrArray = is_bool($value) || is_array($value);
+    	
+    	return !$boolOrArray && trim((string)$value) === '';
     }
     
     /**
@@ -50,15 +70,45 @@ class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
      * 獲取傳輸內容
      * @param unknown_type $key
      */
-    public function input($key){
+    public function input($key = null, $default = null){
     	
+    	$input = $this->getInputSource()->all() + $this->query->all();
+    	
+    	return array_get($input, $key, $default);
     }
     public function all(){
     	
+    	return array_replace_recursive($this->input(), $this->files->all());
     }
     public function except($key){
+    	
+    	$keys = is_array($key) ? $key : func_get_args();
     
+    	$input = $this->all();
+    	
+    	array_forget($input, $keys);
+    	
+    	
+    	return $input;
     }
+    
+    /**
+     * 
+     * 檢測值是否存在
+     * @param unknown_type $key
+     */
+    public function exists($key){
+    	
+    	$keys = is_array($key) ? $key : func_get_args();
+    	
+    	$values = $this->all();
+    	
+    	foreach ($keys as $key){
+    		if( ! array_key_exists($key, $values) ) return false; 
+    	}
+    	return true;
+    }
+    
     /**
      * 
      * 從給定的資源內獲取數據
@@ -82,6 +132,7 @@ class Request extends HttpRequest implements RequestInterface ,ArrayAccess{
     	$acceptTypes = $this->getAcceptableContentTypes();
     	
     	return isset($acceptTypes[0]) && $acceptTypes[0] == 'application/json';
+    	
     }
     public function query($key = null, $default = null){
     	
