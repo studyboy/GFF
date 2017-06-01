@@ -1,15 +1,50 @@
 <?php
 
+use Eros\Foundation\Bootstrap\LoadConfiguration;
 use Eros\Http\Request\AcceptHeader;
 define('ROOT',dirname(__DIR__));
 
 require ROOT."/vendor/autoload.php";
 
 
-$request = Eros\Http\Request::run();
+//$request = Eros\Http\Request::run();
 
 
-print_r(AcceptHeader::fromString($request->headers->get('accept'))->all());
+//print_r(AcceptHeader::fromString($request->headers->get('accept'))->all());
+
+
+//$app = require ROOT.'/bootstrap/app.php';
+//
+//$kernel = $app->make('Eros\Contracts\Http\KernelInterface');
+//
+//$load = new LoadConfiguration();
+//$config = $load->bootstrap($app);
+
+print_r($config);
+
+
+class ai extends  ArrayIterator{
+	
+	public function rewind(){
+		
+//		parent::next();
+        
+		parent::rewind();
+		
+//		echo '.';
+	}
+}
+
+$a1 = new ai(array(1,2,3));
+$a2 = new ai(array('a','b','c'));
+
+$ap = new AppendIterator();
+$ap->append($a1);
+$ap->append($a2);
+
+foreach ($ap as $a){
+	echo $a;
+}
 
 exit;
 

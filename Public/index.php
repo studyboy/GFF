@@ -39,9 +39,10 @@ $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 $reponse = $kernel->handle(
 	$request = Eros\Http\Request::run()
 );
-print_r($kernel);
 
 //輸出模板
-$reponse->send();
+//$reponse->send();
+
+echo $app['config']['app.timezone'];
 
 ?>

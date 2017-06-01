@@ -178,7 +178,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 		$concrete = $this->getConcrete($abstract);
 
 		if( $this->isBuildable($concrete, $abstract) ){
-
+			
 			$object = $this->build($concrete, $parameters);
 			
 		}else{
@@ -191,9 +191,10 @@ class Container implements \ArrayAccess, ContainerInterface {
 			
 			$this->instances[$abstract] = $object;			
 		}
-		
+		//執行回調函數
 		$this->fireResolvingCallbacks($abstract, $object);
 		
+		//記錄已經實例化的類
 		$this->resolved[$abstract] = true;
 		
 		return $object;
@@ -360,6 +361,7 @@ class Container implements \ArrayAccess, ContainerInterface {
 	protected function getConcrete($abstract){
 		
 		if( !is_null($concrete = $this->getContextualConcrete($abstract))){
+			
 			return $concrete;
 		}
 		
