@@ -1,12 +1,16 @@
 <?php
 
+use Eros\Filesystem\Filesystem;
 use Eros\Foundation\Bootstrap\LoadConfiguration;
 use Eros\Http\Request\AcceptHeader;
 define('ROOT',dirname(__DIR__));
 
 require ROOT."/vendor/autoload.php";
 
+//ini_set('display_errors', 'off');
+echo error_reporting();
 
+throw new exception('test');
 //$request = Eros\Http\Request::run();
 
 
@@ -20,7 +24,8 @@ require ROOT."/vendor/autoload.php";
 //$load = new LoadConfiguration();
 //$config = $load->bootstrap($app);
 
-print_r($config);
+$file = new Filesystem();
+var_dump($file->exists('index.php')).'oook';
 
 
 class ai extends  ArrayIterator{
@@ -45,6 +50,8 @@ $ap->append($a2);
 foreach ($ap as $a){
 	echo $a;
 }
+
+
 
 exit;
 
@@ -103,7 +110,7 @@ $it->append($b);
 //	echo $it->key()."::".$it->current()."::".$it->getInnerIterator();
 //}
 
-$ao = new ArrayObject(range(0,9));
+//$ao = new ArrayObject(range(0,9));
 
 //while(list($key,$v) = each($ao)){
 //	unset($ao[$key]);
@@ -115,14 +122,14 @@ $ao = new ArrayObject(range(0,9));
 
 //}
 
-$rdi = new RecursiveDirectoryIterator(dirname(__DIR__).'/config',RecursiveDirectoryIterator::SKIP_DOTS);
-
-$rrdi = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::SELF_FIRST);
-
-
-foreach ($rrdi as $name => $obj){
-	echo $name.'::'.$obj->getFileName().PHP_EOL;
-}
+//$rdi = new RecursiveDirectoryIterator(dirname(__DIR__).'/config',RecursiveDirectoryIterator::SKIP_DOTS);
+//
+//$rrdi = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::SELF_FIRST);
+//
+//
+//foreach ($rrdi as $name => $obj){
+//	echo $name.'::'.$obj->getFileName().PHP_EOL;
+//}
 
 //print_r(iterator_to_array($rrdi));
 /**
@@ -150,12 +157,8 @@ class a {
 	
 }
 
-//$ab = new a();
 
-$rf = new ReflectionClass('a');
 
-print_r($rf->getFileName());
-//
 //foreach ($rf->getProperties() as $pro){
 //	if($pro->isPublic()) echo $pro->getName().":".$pro->getValue($pro).'ll';
 //}

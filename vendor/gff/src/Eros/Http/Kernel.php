@@ -12,7 +12,9 @@ class Kernel implements KernelInterface{
 	
 	
 	protected $bootstrapers = array(
+		'Eros\Foundation\Bootstrap\HandleException',
 		'Eros\Foundation\Bootstrap\LoadConfiguration',
+		'Eros\Foundation\Bootstrap\RegisterProviders',
 	);
 	
 //	protected $middleWare = array();
@@ -27,9 +29,21 @@ class Kernel implements KernelInterface{
 	}
 	
 	public function handle($request){
+		
 	
-		$this->bootstrap();
+		try{
+	
+			$this->app->instance('request', $request);
+			
+			$this->bootstrap();
+			
+		}catch (\Exception $e){
+			
+		}
 	}
+	
+	
+	
 	/**
 	 * 
 	 * 將配置以單例的方式傳入app全局調用
@@ -43,7 +57,13 @@ class Kernel implements KernelInterface{
 	}
 	
 	public function getBootstrapers(){
+		
 		return $this->bootstrapers;
+	}
+	
+	public function reprotException(){
+	}
+	public function renderException(){
 	}
 
 }

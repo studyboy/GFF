@@ -1,6 +1,8 @@
 <?php namespace Eros\Foundation;
 
 
+use Eros\Filesystem\Filesystem;
+
 use Eros\Contracts\Foundation\ApplicationInterface;
 use Eros\Container\Container;
 use Eros\Support\ServiceProvider;
@@ -15,6 +17,11 @@ class Application extends Container implements ApplicationInterface{
 	
 	protected $loadedProviders = array();
 	
+	/**
+	 * 
+	 * 配置提供者數據載體
+	 * @var unknown_type
+	 */
 	protected $deferredServices = array();
 	
 	protected $storagePath;
@@ -54,9 +61,14 @@ class Application extends Container implements ApplicationInterface{
 		$this->instance('app', $this);
 		
 		$this->instance('Eros\Container\Container', $this);
+		
 	}
 	public function registerBaseServiceProviders(){
 		
+		//事件
+		
+	    //路由
+
 	}
 
 	
@@ -78,6 +90,7 @@ class Application extends Container implements ApplicationInterface{
 		}
 		
 	}
+
 	public function getBasePath(){
 		
 		return $this->basePath;
@@ -171,9 +184,17 @@ class Application extends Container implements ApplicationInterface{
 		$this->loadedProviders[$class] = true;
 		
 	}
-	
+	/**
+	 * 用於引導程序引入配置文件中的提供者組件
+	 * @see Eros\Contracts\Foundation.ApplicationInterface::registerConfiguredProviders()
+	 */
 	public function registerConfiguredProviders(){
 		
+		$mainfestPath = $this->getBasePath().'/vendor/service.json';
+		
+		$repository = new ProviderRepository($this, new Filesystem(), $mainfestPath);
+		
+		$repository->load($this->config['app.providers']);
 		
 	}
 
@@ -311,7 +332,7 @@ class Application extends Container implements ApplicationInterface{
 		    'config'			   => ['Eros\Config\Repository', 'Eros\Contracts\Config\RepositoryInterface'],
 //			'events'               => ['Illuminate\Events\Dispatcher', 'Illuminate\Contracts\Events\Dispatcher'],
 //			'log'                  => ['Illuminate\Log\Writer', 'Illuminate\Contracts\Logging\Log', 'Psr\Log\LoggerInterface'],
-//			'request'              => 'Illuminate\Http\Request',
+			'request'              => 'Eros\Http\Request',
 //			'router'               => ['Illuminate\Routing\Router', 'Illuminate\Contracts\Routing\Registrar'],
 //			'url'                  => ['Illuminate\Routing\UrlGenerator', 'Illuminate\Contracts\Routing\UrlGenerator'],
 //			'view'                 => ['Illuminate\View\Factory', 'Illuminate\Contracts\View\Factory'],

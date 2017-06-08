@@ -15,6 +15,11 @@ $app->singleton(
 	'App\Http\Kernel'
 );
 
+$app->singleton(
+	'Eros\Contracts\Debug\HandleExceptionInterface',
+	'App\Exceptions\Handler'
+);
+
 
 
 return $app;

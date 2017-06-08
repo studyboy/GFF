@@ -19,11 +19,6 @@ define('ROOT',dirname(__DIR__));
  */
 require ROOT."/vendor/autoload.php";
 
-//$r = Request::createFromGlobals();
-//print_r($r->headers->get('accept-language'));exit;
-//$ab = AcceptHeader::fromString($r->headers->get('Accept-Language'))->all();
-
-
 /*--------------------------------------------
  * 引入引導程序
  *--------------------------------------------
@@ -32,6 +27,7 @@ require ROOT."/vendor/autoload.php";
  * 視圖給瀏覽器
  * 
  */
+
 $app = require ROOT.'/bootstrap/app.php';
 
 $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
@@ -39,10 +35,8 @@ $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 $reponse = $kernel->handle(
 	$request = Eros\Http\Request::run()
 );
-
+sdfwer
 //輸出模板
 //$reponse->send();
-
-echo $app['config']['app.timezone'];
 
 ?>
