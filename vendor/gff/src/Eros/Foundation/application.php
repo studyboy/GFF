@@ -1,8 +1,6 @@
 <?php namespace Eros\Foundation;
 
-
 use Eros\Filesystem\Filesystem;
-
 use Eros\Contracts\Foundation\ApplicationInterface;
 use Eros\Container\Container;
 use Eros\Support\ServiceProvider;
@@ -167,7 +165,8 @@ class Application extends Container implements ApplicationInterface{
 		
 		$name = is_string($provider) ? $provider : get_class($provider);
 		
-		$myproviders = array_walk($this->serviceProviders, function($value,$key)use($name){
+		$myproviders = array_walk($this->serviceProviders, function($value, $key)use($name){
+			
 			return $value instanceof $name;
 		});
 		
@@ -190,6 +189,7 @@ class Application extends Container implements ApplicationInterface{
 	 */
 	public function registerConfiguredProviders(){
 		
+		die('ok');
 		$mainfestPath = $this->getBasePath().'/vendor/service.json';
 		
 		$repository = new ProviderRepository($this, new Filesystem(), $mainfestPath);

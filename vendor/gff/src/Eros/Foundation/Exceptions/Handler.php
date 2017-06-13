@@ -1,5 +1,7 @@
 <?php namespace Eros\Foundation\Exceptions;
 
+use Eros\Contracts\Foundation\ApplicationInterface;
+
 use Exception;
 use Eros\Debug\view\HttpException;
 use Eros\Debug\View\DisplayExceptionView;
@@ -9,11 +11,13 @@ class Handler implements HandleExceptionInterface{
 
 	
 	protected $dontReport = array();
+	protected $app;
 	
-	public function __construct(){
+	public function __construct(ApplicationInterface $app){
+		//增加日誌記錄流程
+		$this->app = $app;
 		
 	}
-
 	/**
 	 * 
 	 * 異常記入日誌
@@ -62,8 +66,6 @@ class Handler implements HandleExceptionInterface{
 
 			return (new DisplayExceptionView(true))->createResponse($e);
 		}
-		
-		
 	}
 	
 	public function isHttpException(Exception $e){

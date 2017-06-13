@@ -35,7 +35,7 @@ $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
 $reponse = $kernel->handle(
 	$request = Eros\Http\Request::run()
 );
-sdfwer
+
 //輸出模板
 //$reponse->send();
 
