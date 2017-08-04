@@ -1,16 +1,139 @@
 <?php
+namespace Double;
 
-use Eros\Filesystem\Filesystem;
-use Eros\Foundation\Bootstrap\LoadConfiguration;
-use Eros\Http\Request\AcceptHeader;
 define('ROOT',dirname(__DIR__));
 
 require ROOT."/vendor/autoload.php";
 
 //ini_set('display_errors', 'off');
-echo error_reporting();
+//error_reporting(E_ALL);
 
-throw new exception('test');
+$a = explode(' ','CLS55');
+print_r($a);exit;
+
+class ab {
+	public function tt(){
+		echo 'tt';
+	}
+}
+echo ab::class;exit;
+call_user_func(array(new ab(),'tt'),'test');
+
+exit;
+
+
+
+class Event{
+	
+	protected $queues = array();
+	
+	protected $sorted = array();
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $event
+	 * @param unknown_type $listener
+	 * @param unknown_type $priority
+	 * @deprecated
+	 */
+	public function listen($event, $listener, $priority = 0){
+		
+		$key = $event.'_event';
+		
+		$this->queues[$key][$priority][] = is_string($listener) ? $this->createClassListener($listener) : $listener;
+		
+	}
+	
+	public function trigger($event, $args){
+		
+		$event .='_event';
+		
+		foreach ($this->getListener($event) as $e){
+			
+//			print_r($e);exit;
+			$response = call_user_func_array($e, $args);
+		
+			 //返回null的時候處理過程
+			 
+			//返回false終止後面事件
+			if( $response === false ) {
+				break;
+			}
+		
+			$responses[] = $response;
+		}
+	
+		return $responses;
+	}
+	
+	public function getListener($event){
+		
+		$listers = $this->sort($event);
+	
+		return $listers;
+	}
+	
+	public function createClassListener($listener){
+		
+		return function() use ($listener){
+			
+			list($class, $method) = explode('@', $listener);
+			
+			$instance = new $class;
+		
+			return call_user_func_array(
+			
+				array($instance, $method), func_get_args()
+			);
+		};
+	}
+	
+	public function sort($event){
+		
+		$this->sorted[$event]= array(); 
+		
+		$listeners = $this->queues[$event];
+		
+		krsort($listeners);
+	
+		$this->sorted[$event] = call_user_func_array(
+			'array_merge', $listeners
+		);
+		
+		return $this->sorted[$event];
+	}
+	public function createClassCallable($class){
+		
+		list($class, $method) = explode('@', $class);
+		
+		return '';
+		
+	}
+	
+}
+class Aa{
+	
+	public function call($name,$age){
+		echo "My test info. name:{$name}, age:{$age}";
+	}
+}
+
+$e = new Event();
+
+$e->listen('test', function($name, $age){
+
+	echo "My info name:{$name}, age:{$age}";
+},30);
+
+$e->listen('test','Aa@call', 50);
+
+$e->trigger('test', array('hahha','17') );
+
+//print_r($e);
+
+
+exit;
+
 //$request = Eros\Http\Request::run();
 
 

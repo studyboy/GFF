@@ -36,7 +36,7 @@ class ProviderRepository {
 		//載入已編譯過的緩存文件，以便能夠區分提供者的加載順序
 		$mainfest = $this->loadMainfest();	
 		
-		//未編譯的，則進行編譯判斷
+		//未編譯的，則進行編譯判斷，即是否寫入緩存
 		if( $this->isShoudCompile($mainfest, $providers)) {
 			
 			$mainfest = $this->compileMainfest($providers);
@@ -54,7 +54,7 @@ class ProviderRepository {
 			$this->app->register($this->createProvier($provider));
 		}
 	
-		$this->app->setDeferedProviders($mainfest['defered']);
+		$this->app->setDeferredProviders($mainfest['defered']);
 	}
 	/**
 	 * 

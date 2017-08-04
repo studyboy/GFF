@@ -31,6 +31,7 @@ class Filesystem {
 		if($this->isFile($path)){
 			
 			$old = $this->get($path);
+			
 			return $this->put($path, $data.$old);
 		}
 		return false;

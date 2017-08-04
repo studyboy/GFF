@@ -1,5 +1,7 @@
 <?php namespace Eros\Foundation;
 
+use Eros\Events\EventServiceProvider;
+
 use Eros\Filesystem\Filesystem;
 use Eros\Contracts\Foundation\ApplicationInterface;
 use Eros\Container\Container;
@@ -64,6 +66,7 @@ class Application extends Container implements ApplicationInterface{
 	public function registerBaseServiceProviders(){
 		
 		//事件
+		$this->register(new EventServiceProvider($this));
 		
 	    //路由
 
@@ -137,7 +140,8 @@ class Application extends Container implements ApplicationInterface{
 	 * @see Eros\Contracts\Foundation.ApplicationInterface::register()
 	 */
 	public function register($provider, $options = array(), $force = false){
-		
+		//服務器採取統一格式的調用，並於app統一的引入調用
+		//檢測是否已經綁定了相同服務器
 		if( $registered = $this->getProvider($provider) && !$force ){
 			
 			return $registered;
@@ -188,8 +192,7 @@ class Application extends Container implements ApplicationInterface{
 	 * @see Eros\Contracts\Foundation.ApplicationInterface::registerConfiguredProviders()
 	 */
 	public function registerConfiguredProviders(){
-		
-		die('ok');
+
 		$mainfestPath = $this->getBasePath().'/vendor/service.json';
 		
 		$repository = new ProviderRepository($this, new Filesystem(), $mainfestPath);
@@ -296,6 +299,7 @@ class Application extends Container implements ApplicationInterface{
 	}
 	
 	public function isBooted(){
+		
 		return $this->booted;
 	}
 	

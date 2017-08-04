@@ -24,3 +24,11 @@ if(!function_exists('str_contains')){
 		return Str::contains($haystack, $needles);
 	}
 }
+
+if(!function_exists('starts_with')){
+	
+	function starts_with($haystatck, $needles){
+		
+		return Str::stratsWith($haystatck, $needles);
+	}
+}

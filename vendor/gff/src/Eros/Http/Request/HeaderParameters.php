@@ -11,6 +11,7 @@ class HeaderParameters implements \IteratorAggregate, \Countable{
 		}
 	}
 	public function all(){
+		
 		return $this->headers;
 	}
 	
@@ -199,7 +200,7 @@ class HeaderParameters implements \IteratorAggregate, \Countable{
         return $cacheControl;
     }
 	
-	private function formatKey($key){
+	protected function formatKey($key){
 		return strtr(strtolower($key), '_', '-');
 	}
 }
