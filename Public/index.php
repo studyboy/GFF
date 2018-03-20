@@ -5,8 +5,10 @@
  * 
  */
 //error_reporting(E_ALL);
-use Eros\Http\Request\ServerParameters;
-use Eros\Http\Request\Parameters;
+
+use Eros\Http\Request\AcceptHeader;
+use Eros\Http\Request\Request;
+
 define('ROOT',dirname(__DIR__));
 
 /*------------------------------------------------
@@ -15,12 +17,7 @@ define('ROOT',dirname(__DIR__));
  * 
  *
  */
-
 require ROOT."/vendor/autoload.php";
-
-$p = new ServerParameters($_SERVER);
-
-print_r($p->getHeaders());
 
 /*--------------------------------------------
  * 引入引導程序
@@ -30,6 +27,7 @@ print_r($p->getHeaders());
  * 視圖給瀏覽器
  * 
  */
+
 $app = require ROOT.'/bootstrap/app.php';
 
 $kernel = $app->make('Eros\Contracts\Http\KernelInterface');
@@ -39,6 +37,6 @@ $reponse = $kernel->handle(
 );
 
 //輸出模板
-$reponse->send();
+//$reponse->send();
 
 ?>

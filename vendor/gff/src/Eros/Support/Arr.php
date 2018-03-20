@@ -1,5 +1,7 @@
 <?php namespace Eros\Support;
 
+use SebastianBergmann\CodeCoverage\Report\Html\Facade;
+
 class Arr {
 	
 	/**
@@ -34,7 +36,35 @@ class Arr {
 	}
 	public static function flatten($array){
 	}
+	/**
+	 * 
+	 * 以點式確定鍵值深度
+	 * @param unknown_type $array
+	 * @param unknown_type $keys
+	 */
 	public static function forget(&$array, $keys){
+		
+		$original = &$array;
+		
+		foreach((array)$keys as $key){
+			
+			$parts = explode('.', $key);
+			
+			while(count($parts) > 1){
+				
+				$part = array_shift($parts);
+				
+				if(isset($array[$part]) && is_array($array[$part]) ){
+				
+					$array = & $array[$part];
+				}
+			}
+			
+			unset($array[array_shift($parts)]);
+			
+			$array = &$original;
+		}
+		
 	}
 	/**
 	 * 

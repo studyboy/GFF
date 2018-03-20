@@ -9,7 +9,7 @@
  * @version 2017/3/22
  * +-------------------------------------------------
  */
-use Eros\Contract\Config\Repository as RepositoryContract;
+use Eros\Contracts\Config\RepositoryInterface as RepositoryContract;
 use Eros\Support\Arr;
 
 class Repository implements \ArrayAccess,RepositoryContract{
@@ -30,13 +30,13 @@ class Repository implements \ArrayAccess,RepositoryContract{
 	}
 	public function get($key,$default = NULL){
 		
-		return Arr::get($this->items, $key, $default);
+		return array_get($this->items, $key, $default);
 	}
 	/**
 	 * 設置兩個值
 	 * @see Eros\Contract\Config.Repository::set()
 	 */
-	public function set($key, $value){
+	public function set($key, $value = null){
 		
 		if(is_array($key)){
 			foreach ($key as $innerKey=>$innerVal){
@@ -46,7 +46,7 @@ class Repository implements \ArrayAccess,RepositoryContract{
 			Arr::set($this->items, $key, $value);
 		}
 	}
-	public function prepend($key, $value ){
+	public function prepend($key, $value =null ){
 		
 		$array = $this->get($key);
 		
@@ -54,7 +54,7 @@ class Repository implements \ArrayAccess,RepositoryContract{
 		
 		return $this->set($key, $value);
 	}
-	public function push($key, $value){
+	public function push($key, $value = null){
 		
 		$array = $this->get($key);
 		

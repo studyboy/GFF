@@ -13,7 +13,7 @@ use Eros\Support\Finder\Adapter\AdapterInterface;
 use Eros\Support\Finder\Adapter\AbstractAdapter;
 use Eros\Support\Finder\Adapter\PhpAdapter;
 use Eros\Support\Finder\Iterator;
-
+error_reporting(E_ALL);
 class Finder implements \IteratorAggregate, \Countable{
 	
 	private $mode = 0;
@@ -25,6 +25,7 @@ class Finder implements \IteratorAggregate, \Countable{
 	private $iterators = array();
 	private $adapters  = array();
 	private $filters = array();
+	private $ignoreUnreadableDirs = false;
 	
 	public function __construct(){
 		

@@ -28,6 +28,7 @@ class ExcludeFilterIterator extends FilterIterator{
 		
 		foreach ($this->patterns as $pattern){
 			if(preg_match($pattern, $dir)){
+				
 				return false;
 			}
 			return true;
