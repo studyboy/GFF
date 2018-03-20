@@ -7,34 +7,7 @@ class Parameters implements \IteratorAggregate, \Countable {
 	public function __construct(array $parameters){
 		
 		$this->parameters = $parameters;
-	}
-	/**
-	 * 
-	 * 獲取指定路徑下的內容 以a.b獲取
-	 * @param unknown_type $path
-	 * @param unknown_type $default
-	 * @param unknown_type $deep If true,a path like foo.bar will be find.
-	 */
-	/*public function get($path, $default = null, $deep = false){
-		
-		if( !$deep || false === $pos = strpos($path, '.')){
-			return $this->parameters[$path] ?: $default;
-		}
-		
-		//解析含有深層次的
-		$pathArr = explode('.', $path);
-		
-		if(count($pathArr) !== 2) {
-			throw new \InvalidArgumentException(sprintf("Malformed path. expected just %d.",2));
-		}
-		
-		$value = $this->parameters[$pathArr[0]];
-		
-		if(!is_array($value)) return $default;
-		
-		return $value[$pathArr[1]] ?: $default;
-	}*/
-	
+	}	
 	/**
 	 * 
 	 * 獲取內容
@@ -50,6 +23,7 @@ class Parameters implements \IteratorAggregate, \Countable {
         }
 
         $root = substr($path, 0, $pos);
+        
         if (!array_key_exists($root, $this->parameters)) {
             return $default;
         }

@@ -1,6 +1,8 @@
 <?php namespace Eros\Foundation;
 
+use Eros\Events\EventServiceProvider;
 
+use Eros\Filesystem\Filesystem;
 use Eros\Contracts\Foundation\ApplicationInterface;
 use Eros\Container\Container;
 use Eros\Support\ServiceProvider;
@@ -15,6 +17,11 @@ class Application extends Container implements ApplicationInterface{
 	
 	protected $loadedProviders = array();
 	
+	/**
+	 * 
+	 * 配置提供者數據載體
+	 * @var unknown_type
+	 */
 	protected $deferredServices = array();
 	
 	protected $storagePath;
@@ -24,6 +31,8 @@ class Application extends Container implements ApplicationInterface{
 	protected $bootingCallbacks = array();
 	
 	protected $bootedCallbacks = array();
+	
+	protected $hasBeenBootstraped = false;
 	
 	/**
 	 * (non-PHPdoc)
@@ -36,7 +45,7 @@ class Application extends Container implements ApplicationInterface{
 	
 	public function __construct($basePath = null){
 		
-//		$this->registerBaseBindings();
+		$this->registerBaseBindings();
 		
 		$this->registerBaseServiceProviders();
 		
@@ -52,9 +61,15 @@ class Application extends Container implements ApplicationInterface{
 		$this->instance('app', $this);
 		
 		$this->instance('Eros\Container\Container', $this);
+		
 	}
 	public function registerBaseServiceProviders(){
 		
+		//事件
+		$this->register(new EventServiceProvider($this));
+		
+	    //路由
+
 	}
 
 	
@@ -76,6 +91,7 @@ class Application extends Container implements ApplicationInterface{
 		}
 		
 	}
+
 	public function getBasePath(){
 		
 		return $this->basePath;
@@ -124,13 +140,15 @@ class Application extends Container implements ApplicationInterface{
 	 * @see Eros\Contracts\Foundation.ApplicationInterface::register()
 	 */
 	public function register($provider, $options = array(), $force = false){
-		
+		//服務器採取統一格式的調用，並於app統一的引入調用
+		//檢測是否已經綁定了相同服務器
 		if( $registered = $this->getProvider($provider) && !$force ){
 			
 			return $registered;
 		}
 		
 		if(is_string($provider)){
+			
 			$provider = $this->resolveProviderClass();
 		}
 		
@@ -151,7 +169,8 @@ class Application extends Container implements ApplicationInterface{
 		
 		$name = is_string($provider) ? $provider : get_class($provider);
 		
-		$myproviders = array_walk($this->serviceProviders, function($value,$key)use($name){
+		$myproviders = array_walk($this->serviceProviders, function($value, $key)use($name){
+			
 			return $value instanceof $name;
 		});
 		
@@ -168,8 +187,17 @@ class Application extends Container implements ApplicationInterface{
 		$this->loadedProviders[$class] = true;
 		
 	}
-	
+	/**
+	 * 用於引導程序引入配置文件中的提供者組件
+	 * @see Eros\Contracts\Foundation.ApplicationInterface::registerConfiguredProviders()
+	 */
 	public function registerConfiguredProviders(){
+
+		$mainfestPath = $this->getBasePath().'/vendor/service.json';
+		
+		$repository = new ProviderRepository($this, new Filesystem(), $mainfestPath);
+		
+		$repository->load($this->config['app.providers']);
 		
 	}
 
@@ -232,7 +260,7 @@ class Application extends Container implements ApplicationInterface{
 	public function make($abstract, $parameters = array()){
 
 		$abstract = $this->getAliase($abstract);
-		
+//		echo $abstract."::".$abstract."333<br/>";
 //		if( isset($this->deferredServices[$abstract])){
 //			
 //			$this->loadDeferredProvider($abstract);
@@ -267,20 +295,36 @@ class Application extends Container implements ApplicationInterface{
     public function booting($callback){
     	
 		$this->bootingCallbacks[] = $callback;
+		
 	}
 	
 	public function isBooted(){
+		
 		return $this->booted;
 	}
 	
 	public function handle(){
 		
 	}
+	/**
+	 * 
+	 * 將配置等引導代碼引入app,
+	 * @param array $bootstrapers
+	 */
+	public function bootstrapWith(array $bootstrapers){
+		
+		foreach ($bootstrapers as $bootstraper){
+			
+			$this->make($bootstraper)->bootstrap($this);
+		}
+		
+		$this->hasBeenBootstraped = true;
+	}
 	
 	protected function fireAppCallbacks(array $callbacks){
 		
-		foreach ($callbacks as $callback)
-		{
+		foreach ($callbacks as $callback){
+			
 			call_user_func($callback, $this);
 		}
 	}
@@ -288,10 +332,11 @@ class Application extends Container implements ApplicationInterface{
 	public function registerCoreContainerAliases(){
 		
 		$aliases = array(
-			'app'                  => ['Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application'],
+			'app'                  => ['Eros\Foundation\Application', 'Eros\Contracts\Container\ContainerInterface', 'Eros\Contracts\Foundation\ApplicationInterface'],
+		    'config'			   => ['Eros\Config\Repository', 'Eros\Contracts\Config\RepositoryInterface'],
 //			'events'               => ['Illuminate\Events\Dispatcher', 'Illuminate\Contracts\Events\Dispatcher'],
 //			'log'                  => ['Illuminate\Log\Writer', 'Illuminate\Contracts\Logging\Log', 'Psr\Log\LoggerInterface'],
-//			'request'              => 'Illuminate\Http\Request',
+			'request'              => 'Eros\Http\Request',
 //			'router'               => ['Illuminate\Routing\Router', 'Illuminate\Contracts\Routing\Registrar'],
 //			'url'                  => ['Illuminate\Routing\UrlGenerator', 'Illuminate\Contracts\Routing\UrlGenerator'],
 //			'view'                 => ['Illuminate\View\Factory', 'Illuminate\Contracts\View\Factory'],
@@ -304,6 +349,7 @@ class Application extends Container implements ApplicationInterface{
 				$this->alias($key, $alias);
 			}
 		}
+
 	}
 	
 	public function flush(){
@@ -311,5 +357,9 @@ class Application extends Container implements ApplicationInterface{
 		parent::flush();
 		
 		$this->loadedProviders = [];
+	}
+	
+	public function getHasBeenBootstraped(){
+		return $this->hasBeenBootstraped;
 	}
 }

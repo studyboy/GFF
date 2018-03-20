@@ -22,6 +22,8 @@ class PhpAdapter extends AbstractAdapter{
 						new Iterator\RecursiveDirectoryIterator($dir, $flag, $this->ignoreUnreadableDirs) ,
 					    \RecursiveIteratorIterator::SELF_FIRST);
 	
+			 
+					    
 		//過濾模式
 		if( $this->mode ){
 			$iterator = new Iterator\FileTypeFilterIterator($iterator, $this->mode);
@@ -31,14 +33,12 @@ class PhpAdapter extends AbstractAdapter{
 		if($this->excludes){
 			$iterator = new Iterator\ExcludeFilterIterator($iterator, $this->excludes);
 		}
-		
-		
-					    
+							    
 	    //過濾文件名稱
 		if($this->names || $this->notNames){
 			$iterator = new Iterator\FilenameFilterIterator($iterator, $this->names, $this->notNames);
 		}
-		
+
 		return $iterator;
 	}	
 }

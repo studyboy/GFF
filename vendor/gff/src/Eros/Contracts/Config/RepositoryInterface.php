@@ -1,7 +1,7 @@
 <?php
 namespace  Eros\Contracts\Config;
 
-interface Repository{
+interface RepositoryInterface{
 	/**
 	 * 
 	 * 查詢是否存在

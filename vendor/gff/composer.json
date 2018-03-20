@@ -1,0 +1,14 @@
+{
+	"name" : "gff",
+	"description" : "The gff Framework.",
+	"keywords" : ["Framework","gff"],
+	"license" : "MIT",
+	"type" : "project",
+	"autoload" : {
+		"files" :[
+			"src/Eros/Helpers.php"
+		],
+		"psr-4": {"Eros\\": "src/Eros/"}
+		
+	}
+}

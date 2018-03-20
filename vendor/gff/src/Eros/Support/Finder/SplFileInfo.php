@@ -21,7 +21,6 @@ class SplFileInfo extends \SplFileInfo{
 		$this->relativePathname = $relativePathname;
 		
 		parent::__construct($file);
-		
 	}
 	
 	public function getRelativePath(){
@@ -31,8 +30,20 @@ class SplFileInfo extends \SplFileInfo{
 	public function getRelativePathname(){
 		return $this->relativePathname;
 	}
-	
+	/**
+	 * 
+	 * 返回文件內容
+	 */
 	public function getContents(){
 		
+		$level = error_reporting(0);
+		
+		$content = file_get_contents($this->relativePathname);
+		
+		if( false === $content){
+			$error = error_get_last();
+			throw new \RuntimeException($error['message']);
+		}
+		return $content;
 	}
 }
