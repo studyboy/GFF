@@ -21,5 +21,4 @@ $app->singleton(
 );
 
 
-
 return $app;
